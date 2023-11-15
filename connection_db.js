@@ -1,10 +1,26 @@
-const { MongoClient } = require('mongodb');
-const path = require('path');
+import { MongoClient } from 'mongodb';
+// import { join } from 'path';
+// eslint-disable-next-line sort-imports
+import dotenv from 'dotenv';
+dotenv.config();
+// const uri = 'mongodb+srv://Sigel:root123456@cluster0.jgccxok.mongodb.net//?retryWrites=true&w=majority';
 
-// Se establece manualmente la ubicación del archivo .env
-require('dotenv').config({ path: path.join(__dirname, '.env') });
-
+// const client = new MongoClient(uri, process.env.DATABASE_URL);
 const client = new MongoClient(process.env.DATABASE_URL);
+
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+// const client = new MongoClient(uri);
+// const uri = '';
+
+// Create MongoClient with a MongoClientOptions object to set the Stable API version
+// const client = new MongoClient(process.env.DATABASE_URL);
+
+
+// if (!uri) {
+//    console.error('La variable de entorno DATABASE_URL no está configurada.');
+//    process.exit(1);}
+
+// const client = new MongoClient(process.env.DATABASE_URL);
 
 async function connect() {
     let connection = null;
@@ -20,16 +36,16 @@ async function connect() {
     return connection;
 }
 
-async function desconnect() {
+export async function desconnect() {
     try {
-        await client.connect();
+        await client.close();
         console.log('🔌 Desconectado');
     } catch (error) {
         console.log(error.message);
     }
 }
 
-async function connectToCollection(collectionName) {
+export async function connectToCollection(collectionName) {
     const connection = await connect();
     const db = connection.db(process.env.DATABASE_NAME);
     const collection = db.collection(collectionName);
@@ -37,11 +53,9 @@ async function connectToCollection(collectionName) {
     return collection;
 }
 
-async function generateCodigo(collection) {
+export async function generateCodigo(collection) {
     const documentMaxCodigo = await collection.find().sort({ codigo: -1 }).limit(1).toArray();
     const maxCodigo = documentMaxCodigo[0]?.codigo ?? 0;
 
     return maxCodigo + 1;
 }
-
-module.exports = { connectToCollection, desconnect, generateCodigo };

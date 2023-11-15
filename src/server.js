@@ -1,5 +1,7 @@
-const express = require('express');
-const { connectToCollection, desconnect, generateCodigo } = require('../connection_db.js');
+import express, {json, urlencoded} from 'express';
+// eslint-disable-next-line sort-imports
+import { desconnect, connectToCollection, generateCodigo } from '../connection_db.js';
+
 
 const server = express();
 
@@ -8,8 +10,8 @@ const messageMissingData = JSON.stringify({ message: 'Faltan datos relevantes' }
 const messageErrorServer = JSON.stringify({ message: 'Se generado un error en el server' });
 
 // Middlewares
-server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
+server.use(json());
+server.use(urlencoded({ extended: true }));
 
 // Obtener todos registros de los muebles disponibles (metodo GET): Ruta GET http://127.0.0.1:3005/api/v1/muebles
 server.get('/api/v1/muebles', async (req, res) => {

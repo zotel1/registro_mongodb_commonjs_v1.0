@@ -10,12 +10,11 @@
 /* eslint-disable require-await */
 /* eslint-disable no-shadow */
 
-const fs = require('fs');
-const dotenv = require('dotenv');
-const path = require('path');
+import { readFile as _readFile } from 'fs';
+import dotenv from 'dotenv';
+import { join } from 'path';
 
-dotenv.config({ path: path.join(__dirname, '../.env') });
-
+dotenv.config({ path: join(new URL('.', import.meta.url).pathname, '../.env') });
 const testCase = { passed: 0, failed: 0 };
 
 function isEqual(params) {
@@ -31,7 +30,7 @@ function isEqual(params) {
 
 async function readFile(path) {
     return new Promise((resolve) => {
-        fs.readFile(path, 'utf8', (error, content) => {
+        _readFile(path, 'utf8', (error, content) => {
             if (content) resolve(content.split('\n'));
             else resolve([]);
         });
@@ -50,9 +49,10 @@ function testEnv() {
     isEqual({ subTitle: `El valor de "DATABASE_NAME" debe ser "muebleria"`, result: process.env.DATABASE_NAME === 'muebleria' });
 }
 
+
 async function testEnvDist() {
     console.log(`TEST N°1.2: Éxito - Variables de entorno (.env.dist)`);
-    let data = await readFile(path.join(__dirname, '../.env.dist'));
+    let data = await readFile(join(new URL('.', import.meta.url).pathname, '../.env.dist'));
     data = data.length > 0 ? data.map((element) => element.split('=')) : [];
 
     const SERVER_HOST = data.find((item) => item[0] === 'SERVER_HOST');
@@ -72,7 +72,7 @@ async function testEnvDist() {
 
 async function testGitIgnore() {
     console.log(`TEST N°1.3: Éxito - Archivo .gitignore`);
-    let data = await readFile(path.join(__dirname, '../.gitignore'));
+    let data = await readFile(join(new URL('../.gitignore', import.meta.url).pathname));
     data = data.length > 0 ? data : [];
     const NODE_MODULES = data.find((item) => item.trim() === 'node_modules/');
     const ENV = data.find((item) => item.trim() === '.env');
@@ -83,7 +83,7 @@ async function testGitIgnore() {
 
 async function testFileConnectionDB() {
     console.log(`TEST N°1.4: Éxito - Archivo connection_db.js`);
-    let data = await readFile(path.join(__dirname, '../connection_db.js'));
+    let data = await readFile(join(new URL('../connection_db.js', import.meta.url).pathname));
 
     isEqual({ subTitle: `El archivo "connection_db.js" debe existir`, result: (data.length > 0) });
 }
