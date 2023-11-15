@@ -1,26 +1,9 @@
 import { MongoClient } from 'mongodb';
-// import { join } from 'path';
-// eslint-disable-next-line sort-imports
+
 import dotenv from 'dotenv';
 dotenv.config();
-// const uri = 'mongodb+srv://Sigel:root123456@cluster0.jgccxok.mongodb.net//?retryWrites=true&w=majority';
-
-// const client = new MongoClient(uri, process.env.DATABASE_URL);
 const client = new MongoClient(process.env.DATABASE_URL);
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(uri);
-// const uri = '';
-
-// Create MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(process.env.DATABASE_URL);
-
-
-// if (!uri) {
-//    console.error('La variable de entorno DATABASE_URL no está configurada.');
-//    process.exit(1);}
-
-// const client = new MongoClient(process.env.DATABASE_URL);
 
 async function connect() {
     let connection = null;
